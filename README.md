@@ -4,16 +4,40 @@ An empirical benchmark comparing **CognoDB Cloud** against **FalkorDB Cloud**, *
 
 ---
 
-## 🛠️ Hardware & Environment Setup
-To maintain resource parity across platforms, all managed cloud tiers were selected at their equivalent free/entry tiers[cite: 1]:
+## 🗄️ Database Browsers in Action
 
-* **Dataset:** MovieLens `ml-latest-small` (~9,700 Movies, 610 Users, 100,836 Ratings)[cite: 1].
-* **Client Host:** Apple MacBook Air (M1, 8-Core CPU, 8GB Unified RAM) running Python 3.12.
-* **Network Region:** ap-south-1 client calling cloud targets (CognoDB, Neo4j, FalkorDB, Memgraph)[cite: 1].
+<table>
+  <tr>
+    <td align="center"><b>CognoDB Cloud — 2-Hop Graph Traversal</b></td>
+    <td align="center"><b>FalkorDB Cloud — 2-Hop Query Results</b></td>
+  </tr>
+  <tr>
+    <td><img src="assets/cognodb-graph-viz.png" alt="CognoDB graph visualization showing 2-hop traversal from a user node through movies to similar users" width="100%"/></td>
+    <td><img src="assets/falkordb-query-table.png" alt="FalkorDB browser showing query result table with TargetUser, SharedMovie and SimilarUser columns" width="100%"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>FalkorDB Cloud — Graph Traversal View</b></td>
+    <td align="center"><b>Master Benchmark — Live Terminal Output</b></td>
+  </tr>
+  <tr>
+    <td><img src="assets/falkordb-graph-traversal.png" alt="FalkorDB graph browser showing a star-shaped traversal graph with Movie and User nodes" width="100%"/></td>
+    <td><img src="assets/master-benchmark-terminal.png" alt="Terminal output of the master benchmark suite showing query latency matrix and concurrency sweep results for all 5 databases" width="100%"/></td>
+  </tr>
+</table>
+
+---
+
+## 🛠️ Hardware & Environment Setup
+
+To maintain resource parity across platforms, all managed cloud tiers were selected at their equivalent free/entry tiers:
+
+* **Dataset:** MovieLens `ml-latest-small` (~9,700 Movies, 610 Users, 100,836 Ratings)
+* **Client Host:** Apple MacBook Air (M1, 8-Core CPU, 8GB Unified RAM) running Python 3.12
+* **Network Region:** ap-south-1 client calling cloud targets (CognoDB, Neo4j, FalkorDB, Memgraph)
 
 | Database Platform 🌐 | Deployment Model | Allocated Compute / Memory Specs 💻 | Storage Allocation 💾 |
 | :--- | :--- | :--- | :--- |
-| **CognoDB Cloud** 🧠 | Managed Cloud | Burstable 0.5 vCPU, 256 MB RAM[cite: 1] | 1.0 GiB[cite: 1] |
+| **CognoDB Cloud** 🧠 | Managed Cloud | Burstable 0.5 vCPU, 256 MB RAM | 1.0 GiB |
 | **Neo4j AuraDB** 🟢 | Managed Cloud | 0.5 vCPU, 1.0 GB RAM | 1.0 GiB |
 | **Memgraph Cloud** 🟣 | Managed Cloud | 0.5 vCPU, 1.0 GB RAM | 1.0 GiB |
 | **FalkorDB Cloud** ⚡ | Managed Cloud | Free Tier Shared Instance | 1.0 GiB |
@@ -21,9 +45,9 @@ To maintain resource parity across platforms, all managed cloud tiers were selec
 
 ---
 
-## 📈 Benchmark Matrix
+## 📈 Benchmark Results
 
-### 1. Data Ingestion Throughput[cite: 1]
+### 1. Data Ingestion Throughput
 
 | Database Platform | Wall-Clock Load Time (s) ⏱️ | Nodes / sec 📦 | Relationships / sec 🔗 |
 | :--- | :-: | :-: | :-: |
@@ -35,8 +59,9 @@ To maintain resource parity across platforms, all managed cloud tiers were selec
 
 ---
 
-### 2. Query Latency Performance ($p50$ / $p95$ in ms)[cite: 1]
-*Measured across 100 iterations per query after 10 warm-up runs[cite: 1].*
+### 2. Query Latency Performance ($p50$ / $p95$ in ms)
+
+*Measured across 100 iterations per query after 10 warm-up runs.*
 
 | Workload Category | CognoDB Cloud | Neo4j AuraDB | FalkorDB Cloud | Kùzu DB (Local) |
 | :--- | :-: | :-: | :-: | :-: |
@@ -48,7 +73,7 @@ To maintain resource parity across platforms, all managed cloud tiers were selec
 
 ---
 
-### 3. CognoDB Cloud Concurrency Sweep (80% Read / 20% Write)[cite: 1]
+### 3. CognoDB Cloud Concurrency Sweep (80% Read / 20% Write)
 
 | Concurrency Level | Total Executed Queries | Sustained Throughput (QPS) |
 | :-: | :-: | :-: |
@@ -56,14 +81,16 @@ To maintain resource parity across platforms, all managed cloud tiers were selec
 | **10 Worker Threads** | 146 | **14.60 QPS** |
 | **40 Worker Threads** | 674 | **67.40 QPS** |
 
+> The terminal screenshot above shows the **live output** from running `python3 run_master_benchmark.py` — the full matrix comparison across all 5 databases plus the concurrency sweep.
+
 ---
 
 ## 🔬 Architectural Analysis & Insights
 
-1. **In-Process vs. Network Sockets:** Kùzu DB demonstrates sub-millisecond query execution ($0.81\text{ ms}$) because it executes directly within the client Python memory space without TCP network stack overhead[cite: 1].
-2. **Network RTT Baseline:** For all managed cloud platforms (CognoDB, Neo4j, FalkorDB), baseline point-lookup latency is heavily influenced by TCP round-trip latency from the client machine to the cloud host region[cite: 1].
+1. **In-Process vs. Network Sockets:** Kùzu DB demonstrates sub-millisecond query execution ($0.81\text{ ms}$) because it executes directly within the client Python memory space without TCP network stack overhead.
+2. **Network RTT Baseline:** For all managed cloud platforms (CognoDB, Neo4j, FalkorDB), baseline point-lookup latency is heavily influenced by TCP round-trip latency from the client machine to the cloud host region.
 3. **Sparse-Matrix Optimizations:** FalkorDB leads managed cloud throughput by utilizing Redis-backed GraphBLAS sparse matrix operations for relation traversal.
-4. **Concurrency Scaling:** CognoDB Cloud exhibited linear scaling characteristics under concurrent workloads, increasing throughput by **32x** when moving from single-threaded execution (2.10 QPS) to 40 concurrent workers (67.40 QPS)[cite: 1].
+4. **Concurrency Scaling:** CognoDB Cloud exhibited linear scaling characteristics under concurrent workloads, increasing throughput by **32x** when moving from single-threaded execution (2.10 QPS) to 40 concurrent workers (67.40 QPS).
 
 ---
 
@@ -71,5 +98,22 @@ To maintain resource parity across platforms, all managed cloud tiers were selec
 
 1. Clone this repository:
    ```bash
-   git clone [https://github.com/YOUR_USERNAME/cognoDB-cloud-benchmark.git](https://github.com/YOUR_USERNAME/cognoDB-cloud-benchmark.git)
+   git clone https://github.com/Shivaramnnp/cognoDB-cloud-benchmark.git
    cd cognoDB-cloud-benchmark
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Set up credentials:
+   ```bash
+   cp .env.example .env
+   # Edit .env and fill in your database credentials
+   ```
+
+4. Run the full benchmark:
+   ```bash
+   python3 run_master_benchmark.py
+   ```
