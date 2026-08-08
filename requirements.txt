@@ -1,0 +1,6 @@
+neo4j>=5.14.0
+falkordb>=1.0.0
+kuzu>=0.3.0
+numpy>=1.26.0
+python-dotenv>=1.0.0
+
