@@ -1,15 +1,38 @@
-# Virtual Environment
+# ==========================================
+# Virtual Environments
+# ==========================================
 benchmark_env/
 venv/
+.venv/
+env/
 
-# Credentials & Sensitive Data
+# ==========================================
+# Credentials & Sensitive Data — NEVER COMMIT
+# ==========================================
 .env
+.env.local
+.env.*.local
+*.pem
+*.key
 
+# ==========================================
 # Local Database Files & Cache
+# ==========================================
 kuzu_db/
 __pycache__/
 *.pyc
+*.pyo
+
+# ==========================================
+# OS & Editor Files
+# ==========================================
 .DS_Store
-.env
-kuzu_db/
-__pycache__/
+Thumbs.db
+.idea/
+.vscode/
+
+# ==========================================
+# Data Files (can be large)
+# ==========================================
+data/*.csv
+data/*.dat

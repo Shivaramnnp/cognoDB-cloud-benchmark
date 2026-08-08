@@ -1,13 +1,17 @@
 import csv
 import os
 import time
+from dotenv import load_dotenv
 from neo4j import GraphDatabase
 
+# Load credentials from .env file
+load_dotenv()
+
 # 🔑 Memgraph Credentials & Dataset Path
-URI = "bolt+ssc://3.69.173.236:7687"
-USER = "shivaramnnp@gmail.com"
-PASSWORD = "@Shiva9701"
-DATA_DIR = "/Users/shivarampatel/Desktop/ml-latest-small"
+URI = os.getenv("MEMGRAPH_URI")
+USER = os.getenv("MEMGRAPH_USER")
+PASSWORD = os.getenv("MEMGRAPH_PASSWORD")
+DATA_DIR = os.getenv("DATA_DIR", "/Users/shivarampatel/Desktop/ml-latest-small")
 
 
 def load_data():

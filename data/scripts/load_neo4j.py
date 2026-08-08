@@ -1,13 +1,17 @@
 import csv
 import os
 import time
+from dotenv import load_dotenv
 from neo4j import GraphDatabase
 
+# Load credentials from .env file
+load_dotenv()
+
 # 🔑 Neo4j Credentials & Dataset Path
-URI = "neo4j+s://70b4c808.databases.neo4j.io"
-USER = "70b4c808"  # 💡 Note: If authentication fails, change this to "neo4j"
-PASSWORD = "b7irjGFG-eoN3EDPURkYYm6ALdZEKDVRiJDRKw2MC0U"
-DATA_DIR = "/Users/shivarampatel/Desktop/ml-latest-small"
+URI = os.getenv("NEO4J_URI")
+USER = os.getenv("NEO4J_USER")
+PASSWORD = os.getenv("NEO4J_PASSWORD")
+DATA_DIR = os.getenv("DATA_DIR", "/Users/shivarampatel/Desktop/ml-latest-small")
 
 
 def load_data():

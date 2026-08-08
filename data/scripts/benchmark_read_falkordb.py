@@ -1,14 +1,17 @@
+import os
 import random
 import time
 import numpy as np
+from dotenv import load_dotenv
 from falkordb import FalkorDB
 
-HOST = (
-    "r-6jissuruar.instance-2yps35dpo.hc-7up0crkyn.ap-south-1.aws.f2e0a955bb84.cloud"
-)
-PORT = 50107
-USERNAME = "falkordb"
-PASSWORD = "@Shiva9701"
+# Load credentials from .env file
+load_dotenv()
+
+HOST = os.getenv("FALKORDB_HOST")
+PORT = int(os.getenv("FALKORDB_PORT", "50107"))
+USERNAME = os.getenv("FALKORDB_USER")
+PASSWORD = os.getenv("FALKORDB_PASSWORD")
 
 WARMUP_RUNS = 10
 MEASURED_RUNS = 100

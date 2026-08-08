@@ -1,13 +1,17 @@
 import csv
 import os
 import time
+from dotenv import load_dotenv
 from neo4j import GraphDatabase
 
+# Load credentials from .env file
+load_dotenv()
+
 # 🔑 Database Credentials & Dataset Path
-URI = "bolt+s://db-3960f658.databases.cognodb.com"
-USER = "cognodb"
-PASSWORD = "d853adbe9fbc7a26ba884e8bbada9b37"
-DATA_DIR = "/Users/shivarampatel/Desktop/ml-latest-small"
+URI = os.getenv("COGNODB_URI")
+USER = os.getenv("COGNODB_USER")
+PASSWORD = os.getenv("COGNODB_PASSWORD")
+DATA_DIR = os.getenv("DATA_DIR", "/Users/shivarampatel/Desktop/ml-latest-small")
 
 
 def load_data():

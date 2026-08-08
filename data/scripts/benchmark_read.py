@@ -1,13 +1,18 @@
 import random
+import os
 import time
 import numpy as np
+from dotenv import load_dotenv
 from neo4j import GraphDatabase
 from neo4j.exceptions import TransientError, ServiceUnavailable
 
+# Load credentials from .env file
+load_dotenv()
+
 # 🔑 CognoDB Cloud Credentials
-URI = "bolt+s://db-3960f658.databases.cognodb.com"
-USER = "cognodb"
-PASSWORD = "d853adbe9fbc7a26ba884e8bbada9b37"
+URI = os.getenv("COGNODB_URI")
+USER = os.getenv("COGNODB_USER")
+PASSWORD = os.getenv("COGNODB_PASSWORD")
 
 # 🎯 Benchmark Configuration
 WARMUP_RUNS = 10

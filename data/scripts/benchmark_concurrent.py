@@ -1,11 +1,16 @@
 import concurrent.futures
+import os
 import random
 import time
+from dotenv import load_dotenv
 from neo4j import GraphDatabase
 
-URI = "bolt+s://db-3960f658.databases.cognodb.com"
-USER = "cognodb"
-PASSWORD = "d853adbe9fbc7a26ba884e8bbada9b37"
+# Load credentials from .env file
+load_dotenv()
+
+URI = os.getenv("COGNODB_URI")
+USER = os.getenv("COGNODB_USER")
+PASSWORD = os.getenv("COGNODB_PASSWORD")
 
 CONCURRENCY_LEVELS = [1, 10, 40]
 DURATION_SECONDS = 10

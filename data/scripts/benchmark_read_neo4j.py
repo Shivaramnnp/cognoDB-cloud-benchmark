@@ -2,13 +2,17 @@ import os
 import random
 import time
 import numpy as np
+from dotenv import load_dotenv
 from neo4j import GraphDatabase, exceptions
+
+# Load credentials from .env file
+load_dotenv()
 
 # 🔑 Credentials Configuration
 # Switch URI / USER / PASSWORD between Neo4j Aura and Memgraph
-URI = os.getenv("DB_URI", "neo4j+s://70b4c808.databases.neo4j.io")
-USER = os.getenv("DB_USER", "70b4c808")
-PASSWORD = os.getenv("DB_PASSWORD", "b7irjGFG-eoN3EDPURkYYm6ALdZEKDVRiJDRKw2MC0U")
+URI = os.getenv("NEO4J_URI")
+USER = os.getenv("NEO4J_USER")
+PASSWORD = os.getenv("NEO4J_PASSWORD")
 DB_NAME = os.getenv("DB_TARGET", "Neo4j AuraDB")
 
 WARMUP_RUNS = 10
